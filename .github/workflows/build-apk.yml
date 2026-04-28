@@ -24,9 +24,8 @@ jobs:
 
       - name: Create TWA project
         run: |
-          mkdir -p twa/app/src/main
-          
-          # build.gradle (root)
+          mkdir -p twa/app/src/main/res/values
+
           cat > twa/build.gradle << 'EOF'
           buildscript {
               repositories {
@@ -34,29 +33,36 @@ jobs:
                   mavenCentral()
               }
               dependencies {
-                  classpath 'com.android.tools.build:gradle:8.1.0'
+                  classpath 'com.android.tools.build:gradle:8.3.0'
               }
           }
-          allprojects {
+          EOF
+
+          cat > twa/settings.gradle << 'EOF'
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
               repositories {
                   google()
                   mavenCentral()
               }
           }
-          EOF
-
-          # settings.gradle
-          cat > twa/settings.gradle << 'EOF'
+          rootProject.name = "VacationsSPV"
           include ':app'
           EOF
 
-          # gradle.properties
           cat > twa/gradle.properties << 'EOF'
           org.gradle.jvmargs=-Xmx1536m
           android.useAndroidX=true
+          android.enableJetifier=true
           EOF
 
-          # app/build.gradle
           cat > twa/app/build.gradle << 'EOF'
           plugins {
               id 'com.android.application'
@@ -71,7 +77,7 @@ jobs:
                   versionName "1.0"
               }
               buildTypes {
-                  release {
+                  debug {
                       minifyEnabled false
                   }
               }
@@ -86,46 +92,44 @@ jobs:
           }
           EOF
 
-          # AndroidManifest.xml
-          mkdir -p twa/app/src/main
           cat > twa/app/src/main/AndroidManifest.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
               <uses-permission android:name="android.permission.INTERNET" />
               <application
                   android:label="Vacations SPV"
-                  android:theme="@style/Theme.AppCompat.NoActionBar"
-                  android:allowBackup="true">
+                  android:allowBackup="true"
+                  android:supportsRtl="true">
                   <activity
                       android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
                       android:exported="true">
                       <meta-data
                           android:name="android.support.customtabs.trusted.DEFAULT_URL"
                           android:value="https://spvvacation-35ac4jps.netlify.app/" />
-                      <intent-filter android:autoVerify="true">
+                      <intent-filter>
                           <action android:name="android.intent.action.MAIN" />
                           <category android:name="android.intent.category.LAUNCHER" />
-                      </intent-filter>
-                      <intent-filter android:autoVerify="true">
-                          <action android:name="android.intent.action.VIEW"/>
-                          <category android:name="android.intent.category.DEFAULT" />
-                          <category android:name="android.intent.category.BROWSABLE"/>
-                          <data android:scheme="https" android:host="spvvacation-35ac4jps.netlify.app"/>
                       </intent-filter>
                   </activity>
               </application>
           </manifest>
           EOF
 
-          # Setup Gradle wrapper
+          cat > twa/app/src/main/res/values/strings.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <string name="app_name">Vacations SPV</string>
+          </resources>
+          EOF
+
           cd twa
-          gradle wrapper --gradle-version 8.1.1
+          gradle wrapper --gradle-version 8.3
 
       - name: Build APK
         run: |
           cd twa
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --warning-mode all
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
