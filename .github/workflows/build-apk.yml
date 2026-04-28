@@ -123,13 +123,13 @@ jobs:
           EOF
 
           cd twa
-          gradle wrapper --gradle-version 8.3
+          gradle wrapper --gradle-version 8.4
 
       - name: Build APK
         run: |
           cd twa
           chmod +x gradlew
-          ./gradlew assembleDebug --warning-mode all
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
