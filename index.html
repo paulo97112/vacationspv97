@@ -276,7 +276,7 @@
         <span class="taux-euro">€/h</span>
       </div>
       <button class="btn btn-primary" onclick="saveTaux()">💾 Enregistrer le taux</button>
-      <button class="btn btn-secondary" onclick="resetTaux()">↩ Réinitialiser (10,53€)</button>
+      <button class="btn btn-secondary" onclick="resetTaux()">↩️ Réinitialiser (10,53€)</button>
     </div>
 
     <div class="card">
@@ -286,7 +286,7 @@
         Exemple : passer la garde de <strong>60%</strong> à <strong>65%</strong>.
       </p>
       <div id="pct-list"></div>
-      <button class="btn btn-secondary" style="margin-top:14px" onclick="resetPct()">↩ Réinitialiser les pourcentages</button>
+      <button class="btn btn-secondary" style="margin-top:14px" onclick="resetPct()">↩️ Réinitialiser les pourcentages</button>
     </div>
 
     <div class="card">
@@ -296,7 +296,7 @@
 
     <div class="card">
       <div class="card-title">Données</div>
-      <button class="btn btn-secondary" onclick="clearAll()">🗑 Effacer toutes les vacations</button>
+      <button class="btn btn-secondary" onclick="clearAll()">🗑️ Effacer toutes les vacations</button>
     </div>
 
   </div>
@@ -339,7 +339,7 @@ function getCats() {
   return CATS_DEF.map(c => ({ ...c, pct: pctMod[c.id] !== undefined ? pctMod[c.id] : c.pct }));
 }
 function getCat(id) { return getCats().find(c => c.id === id); }
-function hm(m)  { return `${Math.floor(m/60)}h${String(m%60).padStart(2,"0")}`; }
+function hm(m)  { return ${Math.floor(m/60)}h${String(m%60).padStart(2,"0")}; }
 function fmt(n) { return n.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})+"€"; }
 function calcMontant(pct, mins) { return taux * (pct/100) * (mins/60); }
 function timeToMins(t) { if(!t) return null; const [h,m]=t.split(":").map(Number); return h*60+m; }
@@ -357,12 +357,12 @@ function save() {
 function init() {
   const now = new Date();
   const j = document.getElementById("inp-jour");
-  j.innerHTML = Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join("");
+  j.innerHTML = Array.from({length:31},(_,i)=><option value="${i+1}">${i+1}</option>).join("");
   j.value = now.getDate();
   document.getElementById("inp-mois").value = now.getMonth()+1;
   const a = document.getElementById("inp-annee");
   const yr = now.getFullYear();
-  a.innerHTML = [yr-1,yr,yr+1].map(y=>`<option value="${y}">${y}</option>`).join("");
+  a.innerHTML = [yr-1,yr,yr+1].map(y=><option value="${y}">${y}</option>).join("");
   a.value = yr;
   document.getElementById("taux-inp").value = taux;
   buildCatGrid(); buildPctList(); buildBareme(); updateHeader(); renderHistory();
@@ -386,7 +386,7 @@ function showTab(name) {
 function buildCatGrid() {
   document.getElementById("cat-grid").innerHTML = getCats().map(cat => `
     <button class="cat-btn ${cat.id===selCat?'selected':''}"
-      style="${cat.id===selCat?`border-color:${cat.color};background:${cat.color}18`:''}"
+      style="${cat.id===selCat?border-color:${cat.color};background:${cat.color}18:''}"
       onclick="selectCat('${cat.id}')">
       <span class="cat-icon">${cat.icon}</span>
       <span class="cat-label">${cat.label}</span>
@@ -443,7 +443,7 @@ function resetPct() {
   if (!confirm("Réinitialiser tous les pourcentages ?")) return;
   pctMod = {};
   save(); buildPctList(); buildCatGrid(); buildBareme();
-  showToast("↩ Pourcentages réinitialisés");
+  showToast("↩️ Pourcentages réinitialisés");
 }
 
 // ============================================================
@@ -469,7 +469,7 @@ function saveTaux() {
 function resetTaux() {
   taux=10.53; document.getElementById("taux-inp").value=taux;
   save(); buildBareme(); buildCatGrid(); updateHeader();
-  showToast("↩ Taux réinitialisé à 10,53€");
+  showToast("↩️ Taux réinitialisé à 10,53€");
 }
 
 // ============================================================
@@ -516,14 +516,14 @@ function updateIntervUI() {
     <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed #F5C6C6">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <span style="font-size:12px;font-weight:700;color:#C0392B">Intervention ${idx+1}</span>
-        ${interventions.length>1?`<button onclick="supprimerInterv(${idx})" style="background:#FEE;border:1px solid #F5C6C6;border-radius:6px;padding:3px 8px;color:#C0392B;cursor:pointer;font-size:12px">✕ Supprimer</button>`:""}
+        ${interventions.length>1?<button onclick="supprimerInterv(${idx})" style="background:#FEE;border:1px solid #F5C6C6;border-radius:6px;padding:3px 8px;color:#C0392B;cursor:pointer;font-size:12px">✕ Supprimer</button>:""}
       </div>
       <div class="time-row" style="margin-bottom:0">
         <div class="time-block"><label class="time-label">🟢 Départ</label><input class="time-input" type="time" value="${iv.debut}" onchange="onIntervChange(${idx},'debut',this.value)"></div>
         <div class="time-arrow">→</div>
         <div class="time-block"><label class="time-label">🔴 Retour</label><input class="time-input" type="time" value="${iv.fin}" onchange="onIntervChange(${idx},'fin',this.value)"></div>
       </div>
-      ${iv.debut&&iv.fin?`<div style="text-align:center;font-size:12px;color:#888;margin-top:4px">⏱ ${hm(diffMins(iv.debut,iv.fin))}</div>`:""}
+      ${iv.debut&&iv.fin?<div style="text-align:center;font-size:12px;color:#888;margin-top:4px">⏱️ ${hm(diffMins(iv.debut,iv.fin))}</div>:""}
     </div>`).join("");
 }
 
@@ -589,8 +589,8 @@ function addEntry() {
   const jour=parseInt(document.getElementById("inp-jour").value);
   const mois=parseInt(document.getElementById("inp-mois").value);
   const an=parseInt(document.getElementById("inp-annee").value);
-  const moisKey=`${an}-${String(mois).padStart(2,"0")}`;
-  const dateLabel=`${String(jour).padStart(2,"0")} ${MOIS[mois]} ${an}`;
+  const moisKey=${an}-${String(mois).padStart(2,"0")};
+  const dateLabel=${String(jour).padStart(2,"0")} ${MOIS[mois]} ${an};
   const validIntervs=interventions.filter(iv=>iv.debut&&iv.fin);
   const totalIntervMins=getTotalIntervMins();
 
@@ -601,9 +601,9 @@ function addEntry() {
     entries.unshift({id:ts,cat:"garde",label:catG.label,pct:catG.pct,icon:catG.icon,color:catG.color,heures:Math.floor(gardeMins/60),minutes:gardeMins%60,debut:deb,fin,note,jour,mois,an,moisKey,date:dateLabel});
     validIntervs.forEach((iv,i)=>{
       const m=diffMins(iv.debut,iv.fin);
-      entries.unshift({id:ts+i+1,cat:"intervention",label:catI.label,pct:catI.pct,icon:catI.icon,color:catI.color,heures:Math.floor(m/60),minutes:m%60,debut:iv.debut,fin:iv.fin,note:validIntervs.length>1?`Intervention ${i+1}${note?" — "+note:""}`:(note||"Intervention en garde"),jour,mois,an,moisKey,date:dateLabel});
+      entries.unshift({id:ts+i+1,cat:"intervention",label:catI.label,pct:catI.pct,icon:catI.icon,color:catI.color,heures:Math.floor(m/60),minutes:m%60,debut:iv.debut,fin:iv.fin,note:validIntervs.length>1?Intervention ${i+1}${note?" — "+note:""}:(note||"Intervention en garde"),jour,mois,an,moisKey,date:dateLabel});
     });
-    showToast(`✅ Garde + ${validIntervs.length} intervention(s) ajoutées`);
+    showToast(✅ Garde + ${validIntervs.length} intervention(s) ajoutées);
   } else {
     entries.unshift({id:Date.now(),cat:cat.id,label:cat.label,pct:cat.pct,icon:cat.icon,color:cat.color,heures:Math.floor(currentMins/60),minutes:currentMins%60,debut:deb,fin,note,jour,mois,an,moisKey,date:dateLabel});
     showToast("✅ Vacation ajoutée");
@@ -624,7 +624,7 @@ function addEntry() {
 // ============================================================
 function removeEntry(id) {
   entries=entries.filter(e=>e.id!==id);
-  save(); renderHistory(); updateHeader(); showToast("🗑 Vacation supprimée");
+  save(); renderHistory(); updateHeader(); showToast("🗑️ Vacation supprimée");
 }
 
 // ============================================================
@@ -645,7 +645,7 @@ function renderHistory() {
       </div>
       <div class="entry-right">
         <span class="entry-mnt" style="color:${e.color}">${fmt(val)}</span>
-        <button class="del-btn" onclick="removeEntry(${e.id})">🗑</button>
+        <button class="del-btn" onclick="removeEntry(${e.id})">🗑️</button>
       </div>
     </div>`;
   }).join("");
@@ -658,7 +658,7 @@ function buildMonthFilter() {
   const keys=[...new Set(entries.map(e=>e.moisKey||"").filter(Boolean))].sort().reverse();
   const el=document.getElementById("month-filter");
   if (!keys.length) { el.innerHTML=""; return; }
-  el.innerHTML=`<button class="month-pill ${selMonth==='all'?'active':''}" onclick="setMonth('all')">Tous</button>`+
+  el.innerHTML=<button class="month-pill ${selMonth==='all'?'active':''}" onclick="setMonth('all')">Tous</button>+
     keys.map(k=>{const[y,m]=k.split("-");return`<button class="month-pill ${selMonth===k?'active':''}" onclick="setMonth('${k}')">${MOIS[parseInt(m)]} ${y}</button>`;}).join("");
 }
 function setMonth(k) { selMonth=k; buildMonthFilter(); renderRecap(); }
@@ -669,7 +669,7 @@ function setMonth(k) { selMonth=k; buildMonthFilter(); renderRecap(); }
 function renderRecap() {
   const el=document.getElementById("recap-content");
   const filtered=selMonth==="all"?entries:entries.filter(e=>e.moisKey===selMonth);
-  if (!filtered.length) { el.innerHTML=`<div class="empty"><span class="empty-icon">📋</span>${entries.length===0?"Aucune vacation saisie.<br>Ajoutez des entrées dans Saisie.":"Aucune vacation pour ce mois."}</div>`; return; }
+  if (!filtered.length) { el.innerHTML=<div class="empty"><span class="empty-icon">📋</span>${entries.length===0?"Aucune vacation saisie.<br>Ajoutez des entrées dans Saisie.":"Aucune vacation pour ce mois."}</div>; return; }
   const totalMins=filtered.reduce((a,e)=>a+e.heures*60+e.minutes,0);
   const totalMnt=filtered.reduce((a,e)=>a+calcMontant(e.pct,e.heures*60+e.minutes),0);
   const bycat=getCats().map(cat=>{
@@ -679,7 +679,7 @@ function renderRecap() {
     return{...cat,mins,mnt,count:list.length};
   }).filter(Boolean);
   const titre=selMonth==="all"?"Toutes les vacations":(()=>{const[y,m]=selMonth.split("-");return`${MOIS[parseInt(m)]} ${y}`;})();
-  el.innerHTML=`<div style="font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#AAA;margin-bottom:10px">${titre}</div>`+
+  el.innerHTML=<div style="font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#AAA;margin-bottom:10px">${titre}</div>+
     bycat.map(c=>`<div class="recap-card" style="border-color:${c.color}">
       <div class="recap-header"><span style="font-size:22px">${c.icon}</span><span style="flex:1;font-weight:600;font-size:14px;color:#333">${c.label}</span><span class="recap-mnt" style="color:${c.color}">${fmt(c.mnt)}</span></div>
       <div class="recap-sub">${c.count} vacation(s) · ${hm(c.mins)} · ${c.pct}%</div>
@@ -710,7 +710,7 @@ function updateHeader() {
 // ============================================================
 function clearAll() {
   if (!confirm("Effacer toutes les vacations ? Irréversible.")) return;
-  entries=[]; save(); renderHistory(); updateHeader(); showToast("🗑 Données effacées");
+  entries=[]; save(); renderHistory(); updateHeader(); showToast("🗑️ Données effacées");
 }
 
 let toastTimer;
